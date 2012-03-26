@@ -1,0 +1,38 @@
+#!/usr/bin/env python2
+import sys
+import codecs
+import locale
+import pprint
+
+sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
+import urllib
+from BeautifulSoup import BeautifulSoup
+
+URL='http://menus.epfl.ch/cgi-bin/rssMenus'
+
+def print_parsed_menu():
+    con = urllib.urlopen(URL)
+
+    raw_html = con.read()
+    
+    soup = BeautifulSoup(raw_html)
+    restaurant = dict()
+    for i in soup.findAll('item'):
+        title = i.find('title').string.split(":")
+        rest_name = title[0].strip()
+        plate_name = title[1].strip()
+        if not restaurant.has_key(rest_name):
+            restaurant[rest_name] = dict()
+        restaurant[rest_name][plate_name] = filter(lambda a: a, [line.strip() for line in i.find('description').string.strip().split("\n")])
+    
+    for i in restaurant:
+        print(i)
+        for j in restaurant[i]:
+            print("	" + j)
+            for line in restaurant[i][j]:
+				print("		" + line)
+            print("")
+try:
+    print_parsed_menu()
+except IOError:
+    print("Error while parsing the menu")
