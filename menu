@@ -28,9 +28,9 @@ def print_parsed_menu():
     for i in restaurant:
         print(i)
         for j in restaurant[i]:
-            print("	" + j)
+            print("\t" + j)
             for line in restaurant[i][j]:
-				print("		" + line)
+                print("\t"*2 + line)
             print("")
 try:
     print_parsed_menu()
