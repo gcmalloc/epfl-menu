@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 #
 # ----------------------------------------------------------------------------
 # "THE BEER-WARE LICENSE" (Revision 42):
@@ -10,17 +8,14 @@
 #
 
 import sys
-import codecs
-import locale
-import pprint
+      
 
-sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
 import urllib
 from BeautifulSoup import BeautifulSoup
 
 URL='http://menus.epfl.ch/cgi-bin/rssMenus'
 
-def print_parsed_menu():
+def get():
     con = urllib.urlopen(URL)
 
     raw_html = con.read()
@@ -38,16 +33,5 @@ def print_parsed_menu():
         menu_description = [line.strip() for line in raw_menu_description.split("\n")]
         #filter the description to remove empty lines
         restaurant[rest_name][plate_name] = filter(lambda a: a, menu_description)
-    
-    for i in restaurant:
-        print(i)
-        for j in restaurant[i]:
-            print("\t" + j)
-            for line in restaurant[i][j]:
-                print("\t"*2 + line)
-            print("")
 
-try:
-    print_parsed_menu()
-except IOError:
-    print("Error while parsing the menu")
+    return restaurant
