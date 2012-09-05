@@ -1,1 +1,5 @@
 A simple python script to pretty print the menu at epfl 
+
+Usage: 
+    menu [restaurant_regexp]
+restaurant_regexp is a regex that match at least a restaurant.

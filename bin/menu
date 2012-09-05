@@ -12,16 +12,15 @@
 import sys
 import codecs
 import locale
-import pprint
 import epfl.menu
+import re
 
 sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
-import urllib
-from BeautifulSoup import BeautifulSoup
 
-def print_parsed_menu():
+def print_parsed_menu(resto_regexp=''):
     restos = epfl.menu.get()
-    for (resto_name, resto) in restos.iteritems():
+    clean_resto_list = filter(lambda a: re.search(resto_regexp, a[0], flags=re.IGNORECASE), restos.iteritems())
+    for (resto_name, resto) in  clean_resto_list:
         print(resto_name)
         for (menu_name, menu) in resto.iteritems():
             print("\t" + menu_name)
@@ -30,6 +29,9 @@ def print_parsed_menu():
             print("")
 
 try:
-    print_parsed_menu()
+    if len(sys.argv) > 1:
+        print_parsed_menu(sys.argv[1])
+    else:
+        print_parsed_menu()
 except IOError:
     print("Error while parsing the menu")
