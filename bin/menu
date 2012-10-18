@@ -14,11 +14,12 @@ import codecs
 import locale
 import epfl.menu
 import re
+import argparse
 
 sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
 
-def print_parsed_menu(resto_regexp=''):
-    restos = epfl.menu.get()
+def print_parsed_menu(resto_regexp='', supper=False):
+    restos = epfl.menu.get(supper)
     clean_resto_list = filter(lambda a: re.search(resto_regexp, a[0], flags=re.IGNORECASE), restos.iteritems())
     for (resto_name, resto) in  clean_resto_list:
         print(resto_name)
@@ -28,10 +29,18 @@ def print_parsed_menu(resto_regexp=''):
                 print("\t"*2 + line)
             print("")
 
+def createParser():
+    parser = argparse.ArgumentParser(description='Pretty print the epfl menu')
+    parser.add_argument('restaurant_regex', nargs='?', default='',
+                       help='a regex that match the desired restaurant')
+    parser.add_argument('-s', action='store_true',
+                       default=False,
+                       help='Print the menu for the supper')
+    return parser
+
 try:
-    if len(sys.argv) > 1:
-        print_parsed_menu(sys.argv[1])
-    else:
-        print_parsed_menu()
+    parser = createParser()
+    parsed_args = parser.parse_args()
+    print_parsed_menu(parsed_args.restaurant_regex, parsed_args.s)
 except IOError:
     print("Error while parsing the menu")

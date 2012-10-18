@@ -6,20 +6,21 @@
 # this stuff is worth it, you can buy me a beer in return gcmalloc.
 # ----------------------------------------------------------------------------
 #
-
-import sys
-      
-
 import urllib
 from BeautifulSoup import BeautifulSoup
 
-URL='http://menus.epfl.ch/cgi-bin/rssMenus'
+LUNCH_URL='http://menus.epfl.ch/cgi-bin/rssMenus'
+SUPPER_URL='http://menus.epfl.ch/cgi-bin/rssMenus?midisoir=soir'
 
-def get():
-    con = urllib.urlopen(URL)
+def get(supper=False):
+    if supper:
+        url = SUPPER_URL
+    else:
+        url = LUNCH_URL
+    con = urllib.urlopen(url)
 
     raw_html = con.read()
-    
+
     soup = BeautifulSoup(raw_html)
     restaurant = dict()
     for i in soup.findAll('item'):
