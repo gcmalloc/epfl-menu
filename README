@@ -1,5 +1,12 @@
-A simple python script to pretty print the menu at epfl 
+simple python script to pretty print the menu at epfl 
 
-Usage: 
-    menu [restaurant_regexp]
-restaurant_regexp is a regex that match at least a restaurant.
+usage: menu [-h] [-s] [restaurant_regex]
+
+Pretty print the epfl menu
+
+positional arguments:
+  restaurant_regex  a regex that match the desired restaurant
+
+optional arguments:
+  -h, --help        show this help message and exit
+  -s                Print the menu for the supper
