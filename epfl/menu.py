@@ -21,7 +21,7 @@ def get(supper=False):
 
     raw_html = con.read()
 
-    soup = BeautifulSoup(raw_html, "html.parser")
+    soup = BeautifulSoup(raw_html, "html.parser", from_encoding="utf-8")
     restaurant = dict()
     for i in soup.find_all('item'):
         title = i.find('title').string.split(":")
