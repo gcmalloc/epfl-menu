@@ -5,5 +5,5 @@ setup(name='epfl-menu',
       author = 'gcmalloc',
       url = 'http://github.com/gcmalloc/epfl-menu',
       py_modules = ['epfl.menu'],
-      install_requires=['BeautifulSoup'],
+      install_requires=['bs4'],
       scripts = ['bin/menu'])

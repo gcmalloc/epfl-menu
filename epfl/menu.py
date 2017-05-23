@@ -6,8 +6,13 @@
 # this stuff is worth it, you can buy me a beer in return gcmalloc.
 # ----------------------------------------------------------------------------
 #
-import urllib
-from BeautifulSoup import BeautifulSoup
+import sys
+if (sys.version_info > (3, 0)):
+    from urllib.request import urlopen
+else:
+    from urllib import urlopen
+
+from bs4 import BeautifulSoup
 
 LUNCH_URL='http://menus.epfl.ch/cgi-bin/rssMenus'
 SUPPER_URL='http://menus.epfl.ch/cgi-bin/rssMenus?midisoir=soir'
@@ -17,22 +22,22 @@ def get(supper=False):
         url = SUPPER_URL
     else:
         url = LUNCH_URL
-    con = urllib.urlopen(url)
+    con = urlopen(url)
 
     raw_html = con.read()
 
-    soup = BeautifulSoup(raw_html)
+    soup = BeautifulSoup(raw_html, "html.parser", from_encoding="utf-8")
     restaurant = dict()
-    for i in soup.findAll('item'):
+    for i in soup.find_all('item'):
         title = i.find('title').string.split(":")
         rest_name = title[0].strip()
         plate_name = title[1].strip()
-        if not restaurant.has_key(rest_name):
+        if rest_name not in restaurant:
             restaurant[rest_name] = dict()
         raw_menu_description = i.find('description').string
         #clean every line, and strip them
         menu_description = [line.strip() for line in raw_menu_description.split("\n")]
         #filter the description to remove empty lines
-        restaurant[rest_name][plate_name] = filter(lambda a: a, menu_description)
+        restaurant[rest_name][plate_name] = [a for a in menu_description if a]
 
     return restaurant
