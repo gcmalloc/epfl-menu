@@ -16,23 +16,23 @@ import epfl.menu
 import re
 import argparse
 
-sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
+sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout.detach())
 
 def print_parsed_menu(resto_regexp='', supper=False):
     restos = epfl.menu.get(supper)
-    clean_resto_list = filter(lambda a: re.search(resto_regexp, a[0], flags=re.IGNORECASE), restos.iteritems())
-    for (resto_name, resto) in  clean_resto_list:
+    clean_resto_list = [a for a in iter(restos.items()) if re.search(resto_regexp, a[0], flags=re.IGNORECASE)]
+    for (resto_name, resto) in clean_resto_list:
         print(resto_name)
-        for (menu_name, menu) in resto.iteritems():
-            print("\t" + menu_name)
+        for (menu_name, menu) in resto.items():
+            print(("\t" + menu_name))
             for line in menu:
-                print("\t"*2 + line)
+                print(("\t"*2 + line))
             print("")
 
 def createParser():
     parser = argparse.ArgumentParser(description='Pretty print the epfl menu')
     parser.add_argument('restaurant_regex', nargs='?', default='',
-                       help='a regex that match the desired restaurant')
+                       help='a regex to match restaurants against')
     parser.add_argument('-s', action='store_true',
                        default=False,
                        help='Print the menu for the supper')
