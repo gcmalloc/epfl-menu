@@ -6,7 +6,12 @@
 # this stuff is worth it, you can buy me a beer in return gcmalloc.
 # ----------------------------------------------------------------------------
 #
-import urllib.request, urllib.parse, urllib.error
+import sys
+if (sys.version_info > (3, 0)):
+    from urllib.request import urlopen
+else:
+    from urllib import urlopen
+
 from bs4 import BeautifulSoup
 
 LUNCH_URL='http://menus.epfl.ch/cgi-bin/rssMenus'
@@ -17,7 +22,7 @@ def get(supper=False):
         url = SUPPER_URL
     else:
         url = LUNCH_URL
-    con = urllib.request.urlopen(url)
+    con = urlopen(url)
 
     raw_html = con.read()
 
